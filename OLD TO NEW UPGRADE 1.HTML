@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donor Search</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s;
+  }
+
+  /* Foundation overlay */
+  #foundationOverlay {
+    background: #2b7a78;
+    color: white;
+    text-align: center;
+    padding: 12px 10px;
+  }
+  #foundationOverlay .foundation-name {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  #foundationOverlay .creator-name {
+    font-size: 14px;
+  }
+
+  header {
+    background: #3aafa9;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  #top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 15px auto;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  #searchBox {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  #langToggle {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #2b7a78;
+    color: white;
+    cursor: pointer;
+  }
+
+  table {
+    width: 95%;
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  th {
+    background: #2b7a78;
+    color: white;
+  }
+
+  tr:hover {
+    background: #def3f6;
+    cursor: pointer;
+  }
+
+  /* Modal overlay */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0,0,0,0.8);
+  }
+
+  .modal-content {
+    background: white;
+    margin: 8% auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    text-align: center;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    0% {transform: translateY(-30px); opacity:0;}
+    100% {transform: translateY(0); opacity:1;}
+  }
+
+  .modal-header {
+    margin-bottom: 15px;
+  }
+
+  .modal img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+
+  .close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #555;
+  }
+
+  @media(max-width:600px){
+    th, td{
+      font-size:12px;
+      padding:8px;
+    }
+    #top-bar{
+      flex-direction: column;
+    }
+    table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Foundation Overlay -->
+<div id="foundationOverlay">
+  <div class="foundation-name">AL Khidmah Blood Circle Bangladesh</div>
+  <div class="creator-name">Created by Jobayer Hossan</div>
+</div>
+
+<header id="pageTitle">রক্তদাতা তালিকা</header>
+
+<div id="top-bar">
+  <input type="text" id="searchBox" placeholder="নাম, ঠিকানা, মোবাইল বা রক্তের গ্রুপ লিখুন...">
+  <button id="langToggle">English</button>
+</div>
+
+<table id="donorTable">
+  <thead>
+    <tr>
+      <th>ক্রমিক নং</th>
+      <th>নাম</th>
+      <th>জন্ম তারিখ</th>
+      <th>রক্তের গ্রুপ</th>
+      <th>ঠিকানা</th>
+      <th>মোবাইল</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 10 Sample Donors -->
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="মোঃ জোবায়ের হোসেন সিয়াম"
+        data-en-name="Md. Jobayer Hossain Siam"
+        data-bn-dob="০৭/১০/২০০৬"
+        data-en-dob="07/10/2006"
+        data-bn-blood="O+"
+        data-en-blood="O+"
+        data-bn-address="বশিকপুর, লক্ষীপুর"
+        data-en-address="Bashikpur, Lakshipur"
+        data-bn-phone="০১৮৩৯৫৮২২৬১"
+        data-en-phone="01839582261">
+      <td>১</td><td>মোঃ জোবায়ের হোসেন সিয়াম</td><td>০৭/১০/২০০৬</td><td>O+</td><td>বশিকপুর, লক্ষীপুর</td><td>০১৮৩৯৫৮২২৬১</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="ফাহাদ আব্দুল্লাহ"
+        data-en-name="Fahad Abdullah"
+        data-bn-dob="০৪/০৪/২০০৪"
+        data-en-dob="04/04/2004"
+        data-bn-blood="B+"
+        data-en-blood="B+"
+        data-bn-address="ধর্মপুর, চাটখিল, নোয়াখালী"
+        data-en-address="Dhormpur, Chatkhil, Noakhali"
+        data-bn-phone="০১৬০৯৫২৫০৮৩"
+        data-en-phone="01609525083">
+      <td>২</td><td>ফাহাদ আব্দুল্লাহ</td><td>০৪/০৪/২০০৪</td><td>B+</td><td>ধর্মপুর, চাটখিল, নোয়াখালী</td><td>০১৬০৯৫২৫০৮৩</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="সোহেল রানা"
+        data-en-name="Sohel Rana"
+        data-bn-dob="১২/০১/২০০৫"
+        data-en-dob="12/01/2005"
+        data-bn-blood="A+"
+        data-en-blood="A+"
+        data-bn-address="কুতুবপুর, নোয়াখালী"
+        data-en-address="Kutubpur, Noakhali"
+        data-bn-phone="০১৭১২৩৪৫৬৭৮"
+        data-en-phone="01712345678">
+      <td>৩</td><td>সোহেল রানা</td><td>১২/০১/২০০৫</td><td>A+</td><td>কুতুবপুর, নোয়াখালী</td><td>০১৭১২৩৪৫৬৭৮</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="রফিকুল ইসলাম"
+        data-en-name="Rafiqul Islam"
+        data-bn-dob="০৫/০৬/২০০৩"
+        data-en-dob="05/06/2003"
+        data-bn-blood="O-"
+        data-en-blood="O-"
+        data-bn-address="চাঁদপুর, নোয়াখালী"
+        data-en-address="Chandpur, Noakhali"
+        data-bn-phone="০১৮৭৭৭৭৭৭৭৭"
+        data-en-phone="01877777777">
+      <td>৪</td><td>রফিকুল ইসলাম</td><td>০৫/০৬/২০০৩</td><td>O-</td><td>চাঁদপুর, নোয়াখালী</td><td>০১৮৭৭৭৭৭৭৭৭</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="হাসান মাহমুদ"
+        data-en-name="Hasan Mahmud"
+        data-bn-dob="১১/১১/২০০৪"
+        data-en-dob="11/11/2004"
+        data-bn-blood="B-"
+        data-en-blood="B-"
+        data-bn-address="সোনাইপুর, নোয়াখালী"
+        data-en-address="SonaiPur, Noakhali"
+        data-bn-phone="০১৯৯৯৯৯৯৯৯৯"
+        data-en-phone="01999999999">
+      <td>৫</td><td>হাসান মাহমুদ</td><td>১১/১১/২০০৪</td><td>B-</td><td>সোনাইপুর, নোয়াখালী</td><td>০১৯৯৯৯৯৯৯৯৯</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="মাহফুজুর রহমান"
+        data-en-name="Mahfuzur Rahman"
+        data-bn-dob="০১/০৩/২০০৫"
+        data-en-dob="01/03/2005"
+        data-bn-blood="AB+"
+        data-en-blood="AB+"
+        data-bn-address="গোবিন্দপুর, নোয়াখালী"
+        data-en-address="Gobindpur, Noakhali"
+        data-bn-phone="০১৭৫৫৫৫৫৫৫৫"
+        data-en-phone="01755555555">
+      <td>৬</td><td>মাহফুজুর রহমান</td><td>০১/০৩/২০০৫</td><td>AB+</td><td>গোবিন্দপুর, নোয়াখালী</td><td>০১৭৫৫৫৫৫৫৫৫</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="তাসলিমুল ইসলাম"
+        data-en-name="Taslimul Islam"
+        data-bn-dob="১৫/০৭/২০০৬"
+        data-en-dob="15/07/2006"
+        data-bn-blood="AB-"
+        data-en-blood="AB-"
+        data-bn-address="চৌমুহনী, নোয়াখালী"
+        data-en-address="Choumuhani, Noakhali"
+        data-bn-phone="০১৮৮৮৮৮৮৮৮৮"
+        data-en-phone="01888888888">
+      <td>৭</td><td>তাসলিমুল ইসলাম</td><td>১৫/০৭/২০০৬</td><td>AB-</td><td>চৌমুহনী, নোয়াখালী</td><td>০১৮৮৮৮৮৮৮৮৮</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="নাসির উদ্দিন"
+        data-en-name="Nasir Uddin"
+        data-bn-dob="২০/০৯/২০০৫"
+        data-en-dob="20/09/2005"
+        data-bn-blood="A-"
+        data-en-blood="A-"
+        data-bn-address="ফুলগাজী, চাটখিল"
+        data-en-address="Phulgazi, Chatkhil"
+        data-bn-phone="০১৬৬৬৬৬৬৬৬৬"
+        data-en-phone="01666666666">
+      <td>৮</td><td>নাসির উদ্দিন</td><td>২০/০৯/২০০৫</td><td>A-</td><td>ফুলগাজী, চাটখিল</td><td>০১৬৬৬৬৬৬৬৬৬</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="আব্দুল করিম"
+        data-en-name="Abdul Karim"
+        data-bn-dob="০২/১২/২০০৩"
+        data-en-dob="02/12/2003"
+        data-bn-blood="O+"
+        data-en-blood="O+"
+        data-bn-address="নবাবগঞ্জ, নোয়াখালী"
+        data-en-address="Nawabganj, Noakhali"
+        data-bn-phone="০১৮৯৯৯৯৯৯৯৯"
+        data-en-phone="01899999999">
+      <td>৯</td><td>আব্দুল করিম</td><td>০২/১২/২০০৩</td><td>O+</td><td>নবাবগঞ্জ, নোয়াখালী</td><td>০১৮৯৯৯৯৯৯৯৯</td>
+    </tr>
+
+    <tr data-photo="https://via.placeholder.com/120"
+        data-bn-name="রহিমা খাতুন"
+        data-en-name="Rahima Khatun"
+        data-bn-dob="১০/০৫/২০০৪"
+        data-en-dob="10/05/2004"
+        data-bn-blood="B+"
+        data-en-blood="B+"
+        data-bn-address="চাটখিল, নোয়াখালী"
+        data-en-address="Chatkhil, Noakhali"
+        data-bn-phone="০১৭৭৭৭৭৭৭৭৭"
+        data-en-phone="01777777777">
+      <td>১০</td><td>রহিমা খাতুন</td><td>১০/০৫/২০০৪</td><td>B+</td><td>চাটখিল, নোয়াখালী</td><td>০১৭৭৭৭৭৭৭৭৭</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div class="modal-header">
+      <div class="foundation-name">AL Khidmah Blood Circle Bangladesh</div>
+      <div class="creator-name">Created by Jobayer Hossan</div>
+    </div>
+    <img id="modalPhoto" src="" alt="Profile Photo">
+    <h3 id="modalName">Name</h3>
+    <p id="modalDob">জন্ম তারিখ: </p>
+    <p id="modalBlood">রক্তের গ্রুপ: </p>
+    <p id="modalAddress">ঠিকানা: </p>
+    <p id="modalPhone">মোবাইল: </p>
+  </div>
+</div>
+
+<script>
+  const searchBox = document.getElementById('searchBox');
+  const table = document.getElementById('donorTable');
+  const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+  const modal = document.getElementById('profileModal');
+  const modalPhoto = document.getElementById('modalPhoto');
+  const modalName = document.getElementById('modalName');
+  const modalDob = document.getElementById('modalDob');
+  const modalBlood = document.getElementById('modalBlood');
+  const modalAddress = document.getElementById('modalAddress');
+  const modalPhone = document.getElementById('modalPhone');
+  const closeBtn = document.getElementsByClassName('close')[0];
+
+  let isBangla = true;
+
+  function convertToEnglishNum(input) {
+    const en = '0123456789';
+    const bn = '০১২৩৪৫৬৭৮৯';
+    return input.split('').map(ch => bn.includes(ch) ? en[bn.indexOf(ch)] : ch).join('');
+  }
+
+  function filterTable() {
+    const val = searchBox.value.toLowerCase();
+    const valNum = convertToEnglishNum(val);
+
+    for(let row of rows){
+      const name = isBangla ? row.dataset.bnName : row.dataset.enName;
+      const address = isBangla ? row.dataset.bnAddress : row.dataset.enAddress;
+      const phone = isBangla ? row.dataset.bnPhone : row.dataset.enPhone;
+      const blood = isBangla ? row.dataset.bnBlood : row.dataset.enBlood;
+
+      const combined = (name + " " + address + " " + phone + " " + blood).toLowerCase();
+      const combinedNum = convertToEnglishNum(combined);
+
+      row.style.display = (combined.includes(val) || combinedNum.includes(valNum)) ? "" : "none";
+    }
+  }
+
+  searchBox.addEventListener('input', filterTable);
+
+  function updateTableLanguage() {
+    for(let row of rows){
+      row.cells[1].innerText = isBangla ? row.dataset.bnName : row.dataset.enName;
+      row.cells[2].innerText = isBangla ? row.dataset.bnDob : row.dataset.enDob;
+      row.cells[3].innerText = isBangla ? row.dataset.bnBlood : row.dataset.enBlood;
+      row.cells[4].innerText = isBangla ? row.dataset.bnAddress : row.dataset.enAddress;
+      row.cells[5].innerText = isBangla ? row.dataset.bnPhone : row.dataset.enPhone;
+    }
+
+    document.getElementById('pageTitle').innerText = isBangla ? "রক্তদাতা তালিকা" : "Donor List";
+    searchBox.placeholder = isBangla ? "নাম, ঠিকানা, মোবাইল বা রক্তের গ্রুপ লিখুন..." : "Search by name, address, phone or blood group...";
+    langToggle.innerText = isBangla ? "English" : "বাংলা";
+    filterTable();
+  }
+
+  const langToggle = document.getElementById('langToggle');
+  langToggle.onclick = () => {
+    isBangla = !isBangla;
+    updateTableLanguage();
+  }
+
+  // Modal
+  for(let row of rows){
+    row.addEventListener('click', () => {
+      const name = isBangla ? row.dataset.bnName : row.dataset.enName;
+      const dob = isBangla ? row.dataset.bnDob : row.dataset.enDob;
+      const blood = isBangla ? row.dataset.bnBlood : row.dataset.enBlood;
+      const address = isBangla ? row.dataset.bnAddress : row.dataset.enAddress;
+      const phone = isBangla ? row.dataset.bnPhone : row.dataset.enPhone;
+
+      modalPhoto.src = row.dataset.photo || "https://via.placeholder.com/120";
+      modalName.innerText = name;
+      modalDob.innerText = (isBangla ? "জন্ম তারিখ: " : "DOB: ") + dob;
+      modalBlood.innerText = (isBangla ? "রক্তের গ্রুপ: " : "Blood Group: ") + blood;
+      modalAddress.innerText = (isBangla ? "ঠিকানা: " : "Address: ") + address;
+      modalPhone.innerText = (isBangla ? "মোবাইল: " : "Phone: ") + phone;
+
+      modal.style.display = "block";
+    });
+  }
+
+  closeBtn.onclick = () => { modal.style.display = "none"; }
+  window.onclick = (e) => { if(e.target == modal){ modal.style.display = "none"; } }
+
+</script>
+
+</body>
+</html>
